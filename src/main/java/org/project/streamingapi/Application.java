@@ -1,4 +1,4 @@
-package org.project.platformapi;
+package org.project.streamingapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
