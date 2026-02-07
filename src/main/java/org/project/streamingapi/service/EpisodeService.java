@@ -49,7 +49,7 @@ public class EpisodeService {
             );
         }
 
-        episode.setName(updatedEpisode.getName());
+        if (updatedEpisode.getName() != null) episode.setName(updatedEpisode.getName());
         episode.setDuration(updatedEpisode.getDuration());
 
         return episodeRepository.save(episode);

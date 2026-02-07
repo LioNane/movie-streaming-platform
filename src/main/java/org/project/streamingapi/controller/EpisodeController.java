@@ -15,6 +15,7 @@ public class EpisodeController {
         this.episodeService = episodeService;
     }
 
+    @PostMapping("/series/{seriesId}")
     public Episode create(@PathVariable Long seriesId, @RequestBody Episode episode) {
         return episodeService.create(seriesId, episode);
     }

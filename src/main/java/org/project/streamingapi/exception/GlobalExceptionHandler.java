@@ -1,0 +1,56 @@
+package org.project.streamingapi.exception;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicate(DuplicateResourceException ex) {
+        return build(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalid(InvalidInputException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(DatabaseOperationException.class)
+    public ResponseEntity<Map<String, Object>> handleDb(DatabaseOperationException ex) {
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public ResponseEntity<Map<String, Object>> handleEmptyDelete(EmptyResultDataAccessException ex) {
+        return build(HttpStatus.NOT_FOUND, "Resource not found");
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleIntegrity(DataIntegrityViolationException ex) {
+        return build(HttpStatus.CONFLICT, "Database constraint violation");
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleAny(Exception ex) {
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
+    }
+
+    private ResponseEntity<Map<String, Object>> build(HttpStatus status, String message) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("status", status.value());
+        body.put("message", message);
+        return ResponseEntity.status(status).body(body);
+    }
+}

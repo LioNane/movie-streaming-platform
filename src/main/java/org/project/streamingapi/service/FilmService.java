@@ -39,7 +39,7 @@ public class FilmService {
             throw new DuplicateResourceException("Film with name '" + updatedFilm.getName() + "' already exists");
         }
 
-        film.setName(updatedFilm.getName());
+        if (updatedFilm.getName() != null) film.setName(updatedFilm.getName());
         film.setRating(updatedFilm.getRating());
         film.setDuration(updatedFilm.getDuration());
 

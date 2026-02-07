@@ -17,7 +17,7 @@ public class SeriesService {
 
     public Series create(Series series) {
         if (seriesRepository.existsByName(series.getName())) {
-            throw new DuplicateResourceException("Film with name '" + series.getName() + "' already exists");
+            throw new DuplicateResourceException("Series with name '" + series.getName() + "' already exists");
         }
         return seriesRepository.save(series);
     }
@@ -28,21 +28,21 @@ public class SeriesService {
 
     public Series getById(Long id) {
         return seriesRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Film with id " + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Series with id " + id + " not found"));
     }
 
     public Series update(Long id, Series updatedSeries) {
-        Series film = getById(id);
+        Series series = getById(id);
         if (updatedSeries.getName() != null
-                && !updatedSeries.getName().equals(film.getName())
+                && !updatedSeries.getName().equals(series.getName())
                 && seriesRepository.existsByName(updatedSeries.getName())) {
-            throw new DuplicateResourceException("Film with name '" + updatedSeries.getName() + "' already exists");
+            throw new DuplicateResourceException("Series with name '" + updatedSeries.getName() + "' already exists");
         }
 
-        film.setName(updatedSeries.getName());
-        film.setRating(updatedSeries.getRating());
+        if (updatedSeries.getName() != null) series.setName(updatedSeries.getName());
+        series.setRating(updatedSeries.getRating());
 
-        return seriesRepository.save(film);
+        return seriesRepository.save(series);
     }
 
     public void delete(Long id){
