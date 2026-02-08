@@ -4,6 +4,8 @@ I created SpringBoot RESTful API for Movie Streaming Platform that uses design p
 
 B. REST API Documentation
 
+Base URL: http://localhost:8080
+
 Endpoints:
 
 /api/films/ with methods POST, GET;
@@ -51,7 +53,7 @@ Response:
 }
 
 Error:
-POST /api/episodes/series/2
+GET /api/episodes/series/2
 
 {
 "status": 404,
@@ -81,7 +83,39 @@ CRP: Packages avoid forcing dependencies on unused code(controllers only depend 
 E. SOLID and OOP summary
 
 SOLID:
-SRP: controllers delegate to services; services orchestrate; repositories only access DB
-OCP: adding new content types can be done by extending model and updating factory
-LSP: Film and Series are substitutable as Content
 
+SRP: controllers delegate to services; services manage; repositories only access database
+
+OCP: adding new content types can be done by extending model and updating factory
+
+LSP: Film and Series are managed as Content object
+
+ISP: repositories as interfaces are focused per-entity
+
+DIP: controllers and services depend on abstractions
+
+OOP:
+I created abstract superclass Content and subclasses Film, Series, and another class Episode.
+
+Here I apply Inheritance, Abstraction principles in Content and subclasses. Encapsulation in every class, Polymorphism is applicable through ContentFactory.
+
+Advanced OOP features are implemented in package utils but was not used in this API.
+
+F. Database Schema
+
+films(id BIGSERIAL PK, name VARCHAR NOT NULL UNIQUE, duration INT NOT NULL, rating DOUBLE PRECISION NOT NULL)
+series(series_id BIGSERIAL PK, name VARCHAR UNIQUE, rating DOUBLE PRECISION NOT NULL)
+episodes(id BIGSERIAL PK, name VARCHAR UNIQUE, duration INT NOT NULL, series_id BIGINT NOT NULL FK)
+
+G. System Architecture Diagram
+
+UML diagram
+
+H. Instructions to run Spring Boot Application
+
+java Application + Maven + Postman
+
+I. Reflection Section
+
+I learned how to create Spring Boot API and how to work with it through HTTP-requests within Postman.
+I faced challenges with creating design patterns because it is new feature for me.
