@@ -32,21 +32,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<Map<String, Object>> handleEmptyDelete(EmptyResultDataAccessException ex) {
-        return build(HttpStatus.NOT_FOUND, "Resource not found");
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Map<String, Object>> handleIntegrity(DataIntegrityViolationException ex) {
-        return build(HttpStatus.CONFLICT, "Database constraint violation");
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleAny(Exception ex) {
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
-    }
-
     private ResponseEntity<Map<String, Object>> build(HttpStatus status, String message) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("status", status.value());
