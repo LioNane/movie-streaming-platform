@@ -1,3 +1,10 @@
+Bonus task
+
+I made simple in-memory caching within singleton InMemoryCache. 
+I am doing caching in FilmService and SeriesService through method getAll() using keys films_all and series_all.
+Cache automatically invalidates in methods create, update, delete using singleton's method evict().
+Example of caching on screenshot "Caching".
+
 A. Project Overview
 
 I created SpringBoot RESTful API for Movie Streaming Platform that uses design patterns, implementing SOLID and component principles with exception handling.
