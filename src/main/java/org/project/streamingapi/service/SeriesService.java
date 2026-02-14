@@ -6,6 +6,7 @@ import org.project.streamingapi.model.Series;
 import org.project.streamingapi.patterns.builder.EpisodeBuilder;
 import org.project.streamingapi.patterns.factory.ContentFactory;
 import org.project.streamingapi.patterns.factory.ContentType;
+import org.project.streamingapi.patterns.singleton.InMemoryCache;
 import org.project.streamingapi.patterns.singleton.LoggingService;
 import org.project.streamingapi.repository.SeriesRepository;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,10 @@ import java.util.List;
 
 @Service
 public class SeriesService {
+    private static final String CACHE_KEY_ALL_SERIES = "series_all";
+
     private final SeriesRepository seriesRepository;
+    private final InMemoryCache cache = InMemoryCache.getInstance();
     private final ContentFactory contentFactory = new ContentFactory();
 
     public SeriesService(SeriesRepository seriesRepository){
@@ -42,11 +46,13 @@ public class SeriesService {
         if (seriesRepository.existsByName(series.getName())) {
             throw new DuplicateResourceException("Series with name '" + series.getName() + "' already exists");
         }
-        return seriesRepository.save(toSave);
+        Series saved = seriesRepository.save(toSave);
+        cache.evict(CACHE_KEY_ALL_SERIES);
+        return saved;
     }
 
     public List<Series> getAll() {
-        return seriesRepository.findAll();
+        return cache.getOrCompute(CACHE_KEY_ALL_SERIES, seriesRepository::findAll);
     }
 
     public Series getById(Long id) {
@@ -66,11 +72,14 @@ public class SeriesService {
         if (updatedSeries.getName() != null) series.setName(updatedSeries.getName());
         series.setRating(updatedSeries.getRating());
 
-        return seriesRepository.save(series);
+        Series saved = seriesRepository.save(series);
+        cache.evict(CACHE_KEY_ALL_SERIES);
+        return saved;
     }
 
     public void delete(Long id){
         LoggingService.getInstance().info("Deleting series with id " + id);
         seriesRepository.deleteById(id);
+        cache.evict(CACHE_KEY_ALL_SERIES);
     }
 }
